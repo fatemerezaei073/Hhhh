@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>بازی گسترده‌نویسی اعداد</title>
+<style>
+:root{--card:rgba(255,255,255,.94);--tx:#1d2b45;--mut:#4d5b7a;--pri:#ff5e9c;--pri2:#7c4dff;--ok:#12a150;--bad:#e5383b;--bd:#ffd166;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--tx);font-family:Tahoma,"Vazirmatn",system-ui,sans-serif;background:radial-gradient(ellipse at 50% 0%,#3a1c71 0%,#1a1147 45%,#070720 100%);overflow-x:hidden;perspective:1200px}
+.sp{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;animation:tw 2.5s infinite alternate}
+@keyframes tw{from{opacity:.2}to{opacity:1}}
+.pl{position:absolute;border-radius:50%;box-shadow:inset -14px -14px 34px rgba(0,0,0,.55),inset 8px 8px 20px rgba(255,255,255,.25),0 0 50px var(--g);animation:fl 7s ease-in-out infinite alternate}
+.pl::before{content:"";position:absolute;inset:0;border-radius:50%;background:repeating-linear-gradient(170deg,transparent 0 12%,rgba(255,255,255,.12) 12% 16%)}
+.ring::after{content:"";position:absolute;left:-40%;right:-40%;top:38%;bottom:38%;border:7px solid rgba(255,220,130,.75);border-radius:50%;transform:rotate(-18deg);box-shadow:0 0 12px rgba(255,220,130,.6)}
+@keyframes fl{from{transform:translateY(-14px) rotate(0)}to{transform:translateY(14px) rotate(8deg)}}
+.wrap{position:relative;z-index:1;display:flex;justify-content:center}
+.card{background:var(--card);border:3px solid var(--bd);border-radius:24px;margin:20px 14px;padding:22px;max-width:520px;width:100%;text-align:center;box-shadow:0 22px 0 -10px rgba(0,0,0,.25),0 30px 60px rgba(0,0,0,.5);transform:rotateX(3deg)}
+h1{font-size:23px;margin:0 0 8px;color:var(--pri2)}
+p{color:var(--mut);line-height:1.9;margin:6px 0}
+input{width:100%;font:inherit;font-size:19px;padding:12px;border-radius:14px;border:3px solid #b9a7ff;background:#fff;color:var(--tx);text-align:center;margin:10px 0;box-shadow:inset 0 4px 8px rgba(0,0,0,.12)}
+input:focus{outline:none;border-color:var(--pri)}
+button{font:inherit;font-size:18px;font-weight:bold;color:#fff;background:linear-gradient(180deg,#ff8ab8,var(--pri));border:0;border-radius:14px;padding:12px 30px;cursor:pointer;margin-top:8px;box-shadow:0 6px 0 #c2185b,0 12px 18px rgba(0,0,0,.3);transition:transform .1s,box-shadow .1s}
+button:active{transform:translateY(5px);box-shadow:0 1px 0 #c2185b}
+.num{direction:ltr;unicode-bidi:isolate;font-size:50px;font-weight:900;letter-spacing:4px;margin:14px 0;color:#ffb703;text-shadow:1px 1px 0 #f77f00,2px 2px 0 #e85d04,3px 3px 0 #d00000,4px 4px 0 #9d0208,5px 5px 0 #6a040f,7px 10px 14px rgba(0,0,0,.45);transform:rotateX(12deg) rotateY(-6deg);animation:pop .5s}
+@keyframes pop{from{transform:scale(.3) rotateY(90deg);opacity:0}}
+.bar{display:flex;justify-content:space-between;font-weight:bold;color:var(--pri2);font-size:15px}
+.prog{height:12px;background:#e6defc;border-radius:8px;overflow:hidden;margin:8px 0 14px;box-shadow:inset 0 2px 4px rgba(0,0,0,.2)}
+.prog i{display:block;height:100%;background:linear-gradient(90deg,#06d6a0,#ffd166,#ff5e9c);transition:width .4s}
+.fb{margin-top:12px;padding:12px;border-radius:14px;line-height:2;font-weight:bold}
+.ok{background:#d8f8e4;color:var(--ok)}.bad{background:#ffe0e0;color:var(--bad)}
+.ans{direction:ltr;unicode-bidi:isolate;color:var(--tx);font-size:19px}
+.big{font-size:42px;font-weight:900;color:var(--pri2);text-shadow:2px 2px 0 #ffd166,4px 4px 0 #ff5e9c}
+.hint{font-size:14px;background:#fff6d6;border-radius:12px;padding:8px 10px;color:#7a4b00}
+.ex{direction:ltr;unicode-bidi:isolate;display:inline-block;font-weight:bold;color:#7c4dff;margin:4px 0}
+#fx{position:fixed;inset:0;z-index:5;pointer-events:none;overflow:hidden;perspective:800px}
+.bl{position:absolute;bottom:-140px;width:56px;height:70px;border-radius:50% 50% 48% 48%;background:radial-gradient(circle at 32% 28%,#fff9 0 8%,transparent 20%),radial-gradient(circle at 38% 34%,var(--c),color-mix(in srgb,var(--c) 55%,#000) 100%);box-shadow:inset -8px -10px 16px rgba(0,0,0,.3),0 6px 14px rgba(0,0,0,.3);animation:up var(--d) ease-in forwards}
+.bl::before{content:"";position:absolute;bottom:-7px;left:50%;margin-left:-6px;border:6px solid transparent;border-bottom-color:var(--c);border-top:0}
+.bl::after{content:"";position:absolute;top:100%;left:50%;width:2px;height:50px;background:#fff8;margin-top:5px}
+@keyframes up{to{transform:translateY(-125vh) rotateY(180deg) translateX(var(--x))}}
+.sk{position:absolute;left:50%;top:45%;font-size:var(--s);color:var(--c);text-shadow:0 0 10px var(--c),0 0 20px #fff;animation:sk 1.6s cubic-bezier(.2,.7,.4,1) forwards}
+@keyframes sk{to{transform:translate(var(--x),var(--y)) rotate(360deg) scale(.3);opacity:0}}
+.bomb{position:absolute;top:-120px;width:84px;height:84px;border-radius:50%;background:radial-gradient(circle at 30% 28%,#fff8 0 6%,transparent 16%),radial-gradient(circle at 35% 30%,#666,#111 60%,#000);box-shadow:inset -10px -12px 20px rgba(0,0,0,.7),0 18px 24px rgba(0,0,0,.5);animation:bd 1.6s ease-in forwards}
+.bomb::before{content:"";position:absolute;top:-16px;left:50%;margin-left:-9px;width:18px;height:18px;background:linear-gradient(#999,#333);border-radius:4px 4px 0 0}
+.bomb::after{content:"✹";position:absolute;top:-38px;left:50%;margin-left:-13px;font-size:26px;color:#ffd60a;text-shadow:0 0 10px #ff6d00,0 0 18px #f00;animation:sp .2s infinite alternate}
+@keyframes sp{to{transform:scale(1.4) rotate(40deg)}}
+@keyframes bd{0%{transform:translateY(0) rotateZ(0)}70%{transform:translateY(60vh) rotateZ(25deg) scale(1)}85%{transform:translateY(60vh) rotateZ(-10deg) scale(1.3);background:radial-gradient(circle,#fff,#ff9e00,#d00000)}100%{transform:translateY(60vh) scale(3.5);opacity:0}}
+.shake{animation:shk .5s}
+@keyframes shk{20%{transform:translateX(-10px) rotateX(3deg)}40%{transform:translateX(10px) rotateX(3deg)}60%{transform:translateX(-6px) rotateX(3deg)}80%{transform:translateX(6px) rotateX(3deg)}}
+#mute{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:10px;z-index:6;width:44px;height:44px;padding:0;font-size:20px;border-radius:50%;margin:0;box-shadow:0 4px 0 #c2185b,0 8px 12px rgba(0,0,0,.3)}
+</style>
+</head>
+<body>
+<div class="sp" id="sp"></div>
+<div id="fx"></div>
+<button id="mute" onclick="toggleMute()" aria-label="صدا">🔊</button>
+<div class="wrap"><div class="card" id="app"></div></div>
+<script>
+const app=document.getElementById('app'),fx=document.getElementById('fx');
+const fa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const en=s=>s.replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+const COL=['#ff5e9c','#ffd166','#06d6a0','#4cc9f0','#b388ff','#ff9f1c','#ef476f'];
+const TOTAL=5,PER=20;
+let name='',idx=0,score=0,nums=[],locked=false;
+
+
+// ---------- sound (synthesized, no files) ----------
+let AC=null,master=null,ambTimer=null,muted=false,step=0;
+function ac(){
+  try{
+    if(!AC){AC=new (window.AudioContext||window.webkitAudioContext)();master=AC.createGain();master.gain.value=muted?0:1;master.connect(AC.destination)}
+    if(AC.state==='suspended')AC.resume();
+  }catch(e){return null}
+  return AC;
+}
+function toggleMute(){
+  muted=!muted;
+  document.getElementById('mute').textContent=muted?'🔇':'🔊';
+  if(master)master.gain.value=muted?0:1;
+}
+function tone(f,t,dur,type,vol,dest){
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.value=f;
+  g.gain.setValueAtTime(0.0001,t);
+  g.gain.linearRampToValueAtTime(vol,t+0.06);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+  o.connect(g);g.connect(dest||master);o.start(t);o.stop(t+dur+0.05);
+}
+function startAmbient(){
+  if(!ac()||ambTimer)return;
+  const N=[261.6,293.7,329.6,392,440,523.3,392,329.6];
+  const chords=[[130.8,196,261.6],[110,164.8,220],[87.3,130.8,174.6],[98,146.8,196]];
+  const play=()=>{
+    if(!AC)return;
+    const t=AC.currentTime+0.05;
+    if(step%4===0){chords[(step/4)%chords.length].forEach(f=>tone(f,t,3.6,'sine',0.035))}
+    tone(N[Math.floor(Math.random()*N.length)],t,1.8,'triangle',0.04);
+    if(Math.random()<0.5)tone(N[Math.floor(Math.random()*N.length)]*2,t+0.7,1.4,'sine',0.02);
+    step++;
+  };
+  play();ambTimer=setInterval(play,900);
+}
+function noiseBuf(sec){
+  const b=AC.createBuffer(1,Math.floor(AC.sampleRate*sec),AC.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  return b;
+}
+function applause(){
+  if(!ac())return;
+  const t0=AC.currentTime+0.05,nb=noiseBuf(0.08);
+  // cheerful chime
+  [523.3,659.3,784,1046.5].forEach((f,i)=>tone(f,t0+i*0.09,0.7,'triangle',0.12));
+  // many hand claps
+  for(let i=0;i<70;i++){
+    const t=t0+0.15+Math.random()*2.2*(0.6+0.4*Math.random());
+    const src=AC.createBufferSource();src.buffer=nb;
+    const bp=AC.createBiquadFilter();bp.type='bandpass';bp.frequency.value=1200+Math.random()*2200;bp.Q.value=0.8;
+    const g=AC.createGain();
+    const v=0.35*(1-Math.abs(t-t0-1.0)/2.6);
+    g.gain.setValueAtTime(Math.max(v,0.08),t);
+    g.gain.exponentialRampToValueAtTime(0.001,t+0.07);
+    src.connect(bp);bp.connect(g);g.connect(master);src.start(t);src.stop(t+0.08);
+  }
+}
+function bombSound(){
+  if(!ac())return;
+  const t0=AC.currentTime+0.02;
+  // falling whistle
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.type='sine';o.frequency.setValueAtTime(1100,t0);o.frequency.exponentialRampToValueAtTime(180,t0+1.3);
+  g.gain.setValueAtTime(0.0001,t0);g.gain.linearRampToValueAtTime(0.12,t0+0.2);g.gain.linearRampToValueAtTime(0.0001,t0+1.35);
+  o.connect(g);g.connect(master);o.start(t0);o.stop(t0+1.4);
+  // three explosions
+  [1.35,1.6,1.85].forEach((d,i)=>{
+    const t=t0+d,src=AC.createBufferSource();src.buffer=noiseBuf(1.4);
+    const lp=AC.createBiquadFilter();lp.type='lowpass';
+    lp.frequency.setValueAtTime(2200,t);lp.frequency.exponentialRampToValueAtTime(60,t+1.2);
+    const ng=AC.createGain();
+    ng.gain.setValueAtTime(i===0?0.9:0.6,t);ng.gain.exponentialRampToValueAtTime(0.001,t+1.3);
+    src.connect(lp);lp.connect(ng);ng.connect(master);src.start(t);src.stop(t+1.4);
+    const th=AC.createOscillator(),tg=AC.createGain();
+    th.type='sine';th.frequency.setValueAtTime(120,t);th.frequency.exponentialRampToValueAtTime(28,t+0.6);
+    tg.gain.setValueAtTime(0.8,t);tg.gain.exponentialRampToValueAtTime(0.001,t+0.7);
+    th.connect(tg);tg.connect(master);th.start(t);th.stop(t+0.75);
+  });
+}
+
+// background: stars + planets
+(function(){
+  const sp=document.getElementById('sp');
+  for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*2}s;transform:scale(${.5+Math.random()*1.2})`;sp.appendChild(s)}
+  const P=[
+   ['ring',110,'8%','6%','#ffe29a,#f4a259 55%,#9c5b1e','#ffb703'],
+   ['',80,'70%','4%','#9be7ff,#3a86ff 55%,#1b2f8f','#4cc9f0'],
+   ['',60,'82%','48%','#ffb3c1,#ff4d6d 55%,#7a1230','#ff4d6d'],
+   ['',130,'-4%','68%','#b9fbc0,#38b000 50%,#0b4f1a','#06d6a0'],
+   ['ring',70,'76%','80%','#e0c3fc,#8e54e9 55%,#3a1c71','#b388ff'],
+   ['',40,'40%','90%','#fff3b0,#f9c74f 55%,#a6641a','#ffd166']
+  ];
+  P.forEach(([c,z,l,t,g,glow],i)=>{const p=document.createElement('div');p.className='pl '+c;p.style.cssText=`width:${z}px;height:${z}px;left:${l};top:${t};background:radial-gradient(circle at 32% 30%,${g});--g:${glow};animation-delay:-${i*1.3}s`;sp.appendChild(p)});
+})();
+
+function makeNum(){
+  const len=4+Math.floor(Math.random()*3);
+  let s=String(1+Math.floor(Math.random()*9));
+  for(let i=1;i<len;i++) s+=Math.random()<0.3?'0':String(Math.floor(Math.random()*10));
+  if(s.split('').filter(c=>c!=='0').length<2) return makeNum();
+  return s;
+}
+function terms(s){return s.split('').map((c,i)=>c==='0'?0:Number(c)*Math.pow(10,s.length-1-i)).filter(x=>x>0)}
+function newSet(){nums=[];while(nums.length<TOTAL){const n=makeNum();if(!nums.includes(n))nums.push(n)}}
+
+function start(){
+  app.innerHTML=`<h1>🪐 بازی گسترده‌نویسی اعداد 🚀</h1>
+  <p>در هر مرحله یک عدد ۴ تا ۶ رقمی می‌بینی و باید گسترده‌اش را بنویسی.</p>
+  <p>۵ سؤال داری و هر سؤال ۲۰ امتیاز! جواب درست = بادکنک و شرشره 🎈✨ ، جواب غلط = بمب 💣</p>
+  <p><b>اسمت چیست؟</b></p>
+  <input id="nm" placeholder="اسمت را بنویس" maxlength="30" autofocus>
+  <button onclick="begin()">شروع بازی</button>`;
+  document.getElementById('nm').addEventListener('keydown',e=>{if(e.key==='Enter')begin()});
+}
+function begin(){
+  startAmbient();
+  const el=document.getElementById('nm');
+  if(el){const v=el.value.trim();if(!v){el.style.borderColor='var(--bad)';return}name=v}
+  idx=0;score=0;newSet();show();
+}
+function show(){
+  locked=false;
+  app.innerHTML=`<div class="bar"><span>سؤال ${fa(idx+1)} از ${fa(TOTAL)}</span><span>امتیاز: ${fa(score)} ⭐</span></div>
+  <div class="prog"><i style="width:${idx/TOTAL*100}%"></i></div>
+  <p><b>${name}</b> دانش‌آموز خوبم، گسترده‌ی اعداد را بنویس</p>
+  <div class="num">${fa(nums[idx])}</div>
+  <input id="an" dir="ltr" placeholder="${fa('1000 + 200 + 30 + 4')}" autocomplete="off">
+  <div class="hint">✏️ نمونه (از چپ به راست):<br><span class="ex">${fa('5204')} = ${fa('5000')} + ${fa('200')} + ${fa('4')}</span><br>⚠️ در گذاشتن صفرها دقت کن! ${fa('5000')} سه تا صفر دارد و ${fa('200')} دو تا. رقم صفر در عدد، جمله‌ای ندارد (در ${fa('5204')} برای صفرِ دهگان چیزی ننوشتیم).</div>
+  <button id="bt" onclick="check()">بررسی</button>
+  <div id="fb"></div>`;
+  const a=document.getElementById('an');a.focus();
+  a.addEventListener('keydown',e=>{if(e.key==='Enter')locked?next():check()});
+}
+function check(){
+  if(locked)return;
+  const raw=en(document.getElementById('an').value);
+  const given=raw.split(/[^0-9]+/).filter(x=>x!=='').map(Number).filter(x=>x>0);
+  if(!given.length){document.getElementById('an').style.borderColor='var(--bad)';return}
+  const exp=terms(nums[idx]),pool=[...exp];let hit=0;
+  given.forEach(g=>{const i=pool.indexOf(g);if(i>-1){pool.splice(i,1);hit++}});
+  const pts=Math.round(PER*hit/Math.max(exp.length,given.length));
+  score+=pts;locked=true;
+  const full=pts===PER;
+  document.getElementById('fb').innerHTML=`<div class="fb ${full?'ok':'bad'}">${full?`🎉 آفرین ${name}! کاملاً درست بود. +${fa(pts)} امتیاز`:`${pts>0?`نزدیک بود! +${fa(pts)} امتیاز`:'این بار درست نبود، ناراحت نباش!'}<br>پاسخ درست:<div class="ans">${exp.map(fa).join(' + ')}</div>`}</div>`;
+  const b=document.getElementById('bt');b.textContent=idx===TOTAL-1?'دیدن نتیجه':'سؤال بعدی';b.onclick=next;
+  full?celebrate():boom();
+}
+function celebrate(){
+  applause();
+  fx.innerHTML='';
+  for(let i=0;i<16;i++){const b=document.createElement('div');b.className='bl';b.style.cssText=`left:${Math.random()*92}%;--c:${COL[i%COL.length]};--d:${2.4+Math.random()*1.6}s;--x:${(Math.random()-.5)*120}px;animation-delay:${Math.random()*.7}s`;fx.appendChild(b)}
+  for(let i=0;i<40;i++){const s=document.createElement('div');s.className='sk';s.textContent=['✦','✧','★','✺'][i%4];const a=Math.random()*Math.PI*2,r=120+Math.random()*260;s.style.cssText=`--c:${COL[i%COL.length]};--s:${14+Math.random()*18}px;--x:${Math.cos(a)*r}px;--y:${Math.sin(a)*r+120}px`;fx.appendChild(s)}
+  setTimeout(()=>fx.innerHTML='',4500);
+}
+function boom(){
+  bombSound();
+  fx.innerHTML='';
+  for(let i=0;i<3;i++){const b=document.createElement('div');b.className='bomb';b.style.cssText=`left:${18+i*30}%;animation-delay:${i*.25}s`;fx.appendChild(b)}
+  setTimeout(()=>app.classList.add('shake'),1500);
+  setTimeout(()=>app.classList.remove('shake'),2200);
+  setTimeout(()=>fx.innerHTML='',2600);
+}
+function next(){fx.innerHTML='';idx++;idx>=TOTAL?end():show()}
+function end(){
+  const stars=score>=90?3:score>=60?2:score>=30?1:0;
+  const msg=stars===3?'فوق‌العاده‌ای! 🏆':stars===2?'خیلی خوب بود! 👏':stars===1?'خوب بود، با تمرین بهتر هم می‌شوی!':'اشکالی ندارد، دوباره تلاش کن! 💪';
+  app.innerHTML=`<h1>🎊 پایان بازی 🎊</h1><p>${name} عزیز</p>
+  <div style="font-size:44px">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+  <div class="big">${fa(score)} از ${fa(TOTAL*PER)}</div><p>${msg}</p>
+  <button onclick="begin()">بازی دوباره</button>`;
+  if(stars>=2)celebrate();
+}
+start();
+</script>
+</body>
+</html>
